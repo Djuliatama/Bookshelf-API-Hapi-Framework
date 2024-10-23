@@ -50,10 +50,28 @@ const getAllBooks = (request, h) => {
     return h.response({
         status: "success",
         data: {
-            books: books,
+            books: allBooks,
         },
     }).code(200);
 };
+
+const allBooks = [
+    {
+        id: "4j21vYIP22jF6s7MvbIpb",
+        name: "New Book",
+        publisher: "Publisher Name"
+    },
+    {
+        id: "1L7ZtDUFeGs7VlEt",
+        name: "Buku B",
+        publisher: "Dicoding Indonesia"
+    },
+    {
+        id: "K8DZbfI-t3LrY7lD",
+        name: "Buku C",
+        publisher: "Dicoding Indonesia"
+    }
+];
 
 const getById = (request, h) => {
     const { bookId } = request.params;
