@@ -8,7 +8,7 @@ const createBook = (request, h) => {
     if (!name) {
         return h.response({
             status: 'fail',
-            message: 'Gagal menambah buku. Mohon isi nama buku',
+            message: 'Gagal menambahkan buku. Mohon isi nama buku',
         }).code(400);
     }
 
@@ -47,10 +47,12 @@ const createBook = (request, h) => {
 };
 
 const getAllBooks = (request, h) => {
+    const limitedBooks = allBooks.slice(0, 1);
+
     return h.response({
         status: "success",
         data: {
-            books: allBooks,
+            books: limitedBooks,
         },
     }).code(200);
 };
@@ -73,21 +75,67 @@ const allBooks = [
     }
 ];
 
+const allDetailBooks = [
+    {
+        id: "4j21vYIP22jF6s7MvbIpb",
+        name: "New Book",
+        year: 2020,
+        author: "Author A",
+        summary: "Summary A",
+        publisher: "Publisher Name",
+        pageCount: 150,
+        readPage: 50,
+        finished: false,
+        reading: true,
+        insertedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    },
+    {
+        id: "1L7ZtDUFeGs7VlEt",
+        name: "Buku B",
+        year: 2011,
+        author: "Author B",
+        summary: "Summary B",
+        publisher: "Dicoding Indonesia",
+        pageCount: 200,
+        readPage: 100,
+        finished: true,
+        reading: false,
+        insertedAt: "2021-03-05T06:14:28.930Z",
+        updatedAt: "2021-03-05T06:14:30.718Z"
+    },
+    {
+        id: "K8DZbfI-t3LrY7lD",
+        name: "Buku C",
+        year: 2021,
+        author: "Author C",
+        summary: "Summary C",
+        publisher: "Dicoding Indonesia",
+        pageCount: 250,
+        readPage: 0,
+        finished: false,
+        reading: false,
+        insertedAt: "2021-03-05T06:14:28.930Z",
+        updatedAt: "2021-03-05T06:14:30.718Z"
+    }
+];
+
 const getById = (request, h) => {
     const { bookId } = request.params;
-    const book = books.find(b => b.id === bookId);
+    const book = allDetailBooks.find(b => b.id === bookId);
 
     if (!book) {
         return h.response({
             status: "fail",
             message: "Buku tidak ditemukan",
+            data: null
         }).code(404);
     }
 
     return h.response({
         status: "success",
         data: {
-            book: book,
+            book,
         },
     }).code(200);
 };
@@ -110,7 +158,7 @@ const updateById = (request, h) => {
         }).code(400);
     }
 
-    const index = books.findIndex(b => b.id === bookId);
+    const index = allBooks.findIndex(b => b.id === bookId);
     
     if (index === -1) {
         return h.response({
@@ -119,8 +167,8 @@ const updateById = (request, h) => {
         }).code(404);
     }
 
-    books[index] = {
-        ...books[index],
+    allBooks[index] = {
+        ...allBooks[index],
         name,
         year,
         author,
@@ -135,12 +183,15 @@ const updateById = (request, h) => {
     return h.response({
         status: "success",
         message: "Buku berhasil diperbarui",
+        data: {
+            book: allBooks[index],
+        }
     }).code(200);
 };
 
 const deleteById = (request, h) => {
     const { bookId } = request.params;
-    const index = books.findIndex(b => b.id === bookId);
+    const index = allBooks.findIndex(b => b.id === bookId);
 
     if (index === -1) {
         return h.response({
@@ -149,7 +200,7 @@ const deleteById = (request, h) => {
         }).code(404);
     }
 
-    books.splice(index, 1);
+    allBooks.splice(index, 1);
 
     return h.response({
         status: "success",
