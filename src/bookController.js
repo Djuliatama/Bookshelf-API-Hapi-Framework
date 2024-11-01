@@ -47,7 +47,12 @@ const createBook = (request, h) => {
 };
 
 const getAllBooks = (request, h) => {
-    const limitedBooks = allBooks.slice(0, 1);
+    const limitedBooks = books.map(book => ({
+        id: book.id,
+        name: book.name,
+        publisher: book.publisher
+    }));
+
 
     return h.response({
         status: "success",
@@ -122,7 +127,7 @@ const allDetailBooks = [
 
 const getById = (request, h) => {
     const { bookId } = request.params;
-    const book = allDetailBooks.find(b => b.id === bookId);
+    const book = books.find(b => b.id === bookId);
 
     if (!book) {
         return h.response({
@@ -158,7 +163,7 @@ const updateById = (request, h) => {
         }).code(400);
     }
 
-    const index = allBooks.findIndex(b => b.id === bookId);
+    const index = books.findIndex(b => b.id === bookId);
     
     if (index === -1) {
         return h.response({
@@ -167,8 +172,8 @@ const updateById = (request, h) => {
         }).code(404);
     }
 
-    allBooks[index] = {
-        ...allBooks[index],
+    books[index] = {
+        ...books[index],
         name,
         year,
         author,
@@ -183,15 +188,12 @@ const updateById = (request, h) => {
     return h.response({
         status: "success",
         message: "Buku berhasil diperbarui",
-        data: {
-            book: allBooks[index],
-        }
     }).code(200);
 };
 
 const deleteById = (request, h) => {
     const { bookId } = request.params;
-    const index = allBooks.findIndex(b => b.id === bookId);
+    const index = books.findIndex(b => b.id === bookId);
 
     if (index === -1) {
         return h.response({
@@ -200,7 +202,7 @@ const deleteById = (request, h) => {
         }).code(404);
     }
 
-    allBooks.splice(index, 1);
+    books.splice(index, 1);
 
     return h.response({
         status: "success",
